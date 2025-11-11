@@ -171,9 +171,11 @@
         let gold = 0;
         let horseshoes = 0;
         
-        // Инициализация Telegram
-        let tg = window.Telegram.WebApp;
-        tg.expand();
+        // Инициализация Telegram (с проверкой на существование)
+        if (window.Telegram && window.Telegram.WebApp) {
+            let tg = window.Telegram.WebApp;
+            tg.expand();
+        }
         
         function selectRandomOpponent() {
             const randomIndex = Math.floor(Math.random() * opponents.length);
