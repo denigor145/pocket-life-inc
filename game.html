@@ -8,256 +8,79 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh; 
-            color: white; 
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: white; padding: 20px;
         }
-        
-        /* Добавляем узорный фон */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
-                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 1px, transparent 1px);
-            background-size: 50px 50px, 30px 30px;
-            z-index: -1;
-        }
-        
-        .container { 
-            max-width: 400px; 
-            margin: 0 auto;
-            animation: fadeIn 0.8s ease-in;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+        .container { max-width: 400px; margin: 0 auto; }
         .character-info { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-            backdrop-filter: blur(10px);
-            padding: 25px; 
-            border-radius: 20px; 
-            margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1); padding: 20px; 
+            border-radius: 15px; margin-bottom: 20px; 
         }
         
-        .opponent-image-container {
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
+        /* Стили для картинки соперника */
         .opponent-image {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
+            display: block;
+            margin: 0 auto 15px auto;
             border: 3px solid #ffd700;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-        }
-        
-        .character-info h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 24px;
-            color: #ffd700;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
         .health-bar { 
-            background: rgba(0,0,0,0.3); 
-            height: 35px;
-            border-radius: 18px; 
-            margin: 15px 0; 
-            position: relative; 
-            overflow: hidden;
-            border: 2px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.2); height: 30px;
+            border-radius: 15px; margin: 10px 0; position: relative; overflow: hidden;
         }
-        
         .health-fill { 
-            background: linear-gradient(90deg, #4CAF50, #8BC34A, #CDDC39);
-            height: 100%; 
-            width: 67%; 
-            border-radius: 15px; 
-            transition: width 0.5s ease;
-            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            background: linear-gradient(90deg, #4CAF50, #8BC34A); height: 100%; 
+            width: 100%; border-radius: 15px; transition: width 0.5s ease;
         }
-        
         .health-text { 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            font-weight: bold;
-            font-size: 14px;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            position: absolute; top: 50%; left: 50%; 
+            transform: translate(-50%, -50%); font-weight: bold;
         }
-        
         .btn-action { 
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-            color: white; 
-            border: none;
-            padding: 18px 30px; 
-            font-size: 18px; 
-            border-radius: 25px;
-            cursor: pointer; 
-            width: 100%; 
-            margin: 15px 0;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255,255,255,0.2);
+            background: #ff6b6b; color: white; border: none;
+            padding: 15px 30px; font-size: 16px; border-radius: 25px;
+            cursor: pointer; width: 100%; margin: 10px 0;
         }
-        
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
-        }
-        
-        .btn-action:active {
-            transform: translateY(0);
-        }
-        
         .inventory { 
-            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 20px; 
-            margin-top: 25px;
-            border: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1); padding: 15px;
+            border-radius: 15px; margin-top: 20px;
         }
-        
-        .inventory h3 {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #ffd700;
-            font-size: 20px;
-        }
-        
-        .inventory-items { 
-            display: flex; 
-            justify-content: space-around; 
-            margin-top: 15px;
-            font-size: 16px;
-        }
-        
-        .inventory-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,215,0,0.15);
-            padding: 12px 18px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,215,0,0.4);
-        }
-
-        .item-icon {
-            font-size: 20px;
-        }
-
-        .item-count {
-            font-weight: bold;
-            font-size: 18px;
-            color: #ffd700;
-        }
-        
+        .inventory-items { display: flex; justify-content: space-around; margin-top: 10px; }
         .modal { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0,0,0,0.9); 
-            display: flex; 
-            align-items: center;
-            justify-content: center; 
-            z-index: 1000;
-            animation: modalAppear 0.3s ease-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex; align-items: center;
+            justify-content: center; z-index: 1000;
         }
-        
-        @keyframes modalAppear {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
         .modal-content { 
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white; 
-            padding: 40px 30px;
-            border-radius: 25px; 
-            text-align: center; 
-            max-width: 320px; 
-            width: 90%;
-            border: 2px solid rgba(255,215,0,0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            animation: modalSlide 0.4s ease-out;
+            background: white; color: #333; padding: 30px;
+            border-radius: 20px; text-align: center; max-width: 300px; width: 90%;
         }
-        
-        @keyframes modalSlide {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        
-        .modal-content h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #ffd700;
-        }
-        
         .hidden { display: none !important; }
-        
-        /* Анимация для здоровья */
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .health-pulse {
-            animation: pulse 0.3s ease-in-out;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="character-info">
-            <!-- Добавляем картинку соперника -->
-            <div class="opponent-image-container">
-                <img id="opponentImage" src="" alt="Соперник" class="opponent-image">
-            </div>
-            <h2 id="characterName">Воин</h2>
+            <!-- Картинка соперника -->
+            <img id="opponentImage" src="" alt="Соперник" class="opponent-image">
+            <h2 id="characterName">Персонаж</h2>
             <div class="health-bar">
-                <div class="health-fill" id="healthFill" style="width: 100%"></div>
-                <span class="health-text" id="healthText">100/100</span>
+                <div class="health-fill" id="healthFill"></div>
+                <span class="health-text" id="healthText">100/150</span>
             </div>
         </div>
         
-        <button class="btn-action" onclick="performAction()">Выполнить действие</button>
+        <button id="actionBtn" class="btn-action">Выполнить действие</button>
         
         <div class="inventory">
-            <h3>🎒 Инвентарь</h3>
+            <h3>Инвентарь</h3>
             <div class="inventory-items">
-                <div class="inventory-item">
-                    <span class="item-icon">💰</span>
-                    <span class="item-count" id="goldCount">0</span>
-                </div>
-                <div class="inventory-item">
-                    <span class="item-icon">🍀</span>
-                    <span class="item-count" id="horseshoeCount">0</span>
-                </div>
+                <div>Золото: <span id="goldCount">0</span></div>
+                <div>Подковы: <span id="horseshoeCount">0</span></div>
             </div>
         </div>
     </div>
@@ -266,10 +89,9 @@
     <div id="winModal" class="modal hidden">
         <div class="modal-content">
             <h2>🎉 Победа!</h2>
-            <p>Вы победили и получаете:</p>
             <p>+10 золотых</p>
             <p id="itemReward"></p>
-            <button class="btn-action" onclick="goToMainMenu()">В главное меню</button>
+            <button id="toMainMenuWin" class="btn-action">В главное меню</button>
         </div>
     </div>
 
@@ -277,8 +99,7 @@
     <div id="loseModal" class="modal hidden">
         <div class="modal-content">
             <h2>💀 Поражение</h2>
-            <p>Ваш персонаж проиграл!</p>
-            <button class="btn-action" onclick="goToMainMenu()">В главное меню</button>
+            <button id="toMainMenuLose" class="btn-action">В главное меню</button>
         </div>
     </div>
 
@@ -287,13 +108,13 @@
         const opponents = [
             {
                 name: "Воин",
-                image: 'sales-pers1.jpg',
+                image: 'sales-pers1.jpg', // ТВОЯ КАРТИНКА
                 maxHealth: 100,
                 health: 100
             },
             {
                 name: "Маг", 
-                image: 'sales-pers2.jpg',
+                image: 'sales-pers2.jpg', // ТВОЯ ВТОРАЯ КАРТИНКА  
                 maxHealth: 120,
                 health: 120
             }
@@ -307,85 +128,67 @@
         let tg = window.Telegram.WebApp;
         tg.expand();
         
-        // Выбор случайного соперника
         function selectRandomOpponent() {
             const randomIndex = Math.floor(Math.random() * opponents.length);
             currentOpponent = {...opponents[randomIndex]};
-            currentOpponent.health = currentOpponent.maxHealth; // Сбрасываем здоровье
             updateUI();
         }
         
         function performAction() {
             if (!currentOpponent) return;
-            
+
             const success = Math.random() <= 0.8;
-            const healthFill = document.getElementById('healthFill');
-            
-            // Анимация пульса
-            healthFill.classList.add('health-pulse');
-            setTimeout(() => {
-                healthFill.classList.remove('health-pulse');
-            }, 300);
-            
+
             if (success) {
-                // Удар прошёл - отнимаем здоровье
                 currentOpponent.health -= 30;
                 if (currentOpponent.health < 0) currentOpponent.health = 0;
             } else {
-                // Удар не прошёл - восстанавливаем здоровье
                 currentOpponent.health += 20;
                 if (currentOpponent.health > currentOpponent.maxHealth) {
                     currentOpponent.health = currentOpponent.maxHealth;
                 }
             }
-            
+
             updateUI();
             checkGameEnd();
         }
         
-        function updateUI() {
-            if (!currentOpponent) return;
-            
-            // Обновляем имя и здоровье
-            document.getElementById('characterName').textContent = currentOpponent.name;
-            const healthPercent = (currentOpponent.health / currentOpponent.maxHealth) * 100;
-            document.getElementById('healthFill').style.width = `${healthPercent}%`;
-            document.getElementById('healthText').textContent = `${currentOpponent.health}/${currentOpponent.maxHealth}`;
-            
-            // Обновляем инвентарь
-            document.getElementById('goldCount').textContent = gold;
-            document.getElementById('horseshoeCount').textContent = horseshoes;
-            
-            // Обновляем картинку
-            const opponentImage = document.getElementById('opponentImage');
-            if (opponentImage) {
-                opponentImage.src = currentOpponent.image;
-                opponentImage.alt = currentOpponent.name;
-            }
-        }
-        
         function checkGameEnd() {
             if (currentOpponent.health <= 0) {
-                // Игрок победил
                 gold += 10;
                 if (Math.random() <= 0.2) {
                     horseshoes += 1;
                     document.getElementById('itemReward').textContent = '+1 Подкова';
-                } else {
-                    document.getElementById('itemReward').textContent = '';
                 }
                 document.getElementById('winModal').classList.remove('hidden');
             } else if (currentOpponent.health >= currentOpponent.maxHealth) {
-                // Соперник победил
                 document.getElementById('loseModal').classList.remove('hidden');
             }
+        }
+        
+        function updateUI() {
+            if (!currentOpponent) return;
+
+            document.getElementById('characterName').textContent = currentOpponent.name;
+            document.getElementById('healthFill').style.width = `${(currentOpponent.health / currentOpponent.maxHealth) * 100}%`;
+            document.getElementById('healthText').textContent = `${currentOpponent.health}/${currentOpponent.maxHealth}`;
+            document.getElementById('goldCount').textContent = gold;
+            document.getElementById('horseshoeCount').textContent = horseshoes;
+            
+            // Устанавливаем картинку
+            document.getElementById('opponentImage').src = currentOpponent.image;
         }
         
         function goToMainMenu() {
             window.location.href = 'index.html';
         }
         
-        // Начинаем игру при загрузке
+        // Назначаем обработчики событий
+        document.getElementById('actionBtn').addEventListener('click', performAction);
+        document.getElementById('toMainMenuWin').addEventListener('click', goToMainMenu);
+        document.getElementById('toMainMenuLose').addEventListener('click', goToMainMenu);
+        
+        // Начинаем игру
         selectRandomOpponent();
     </script>
 </body>
