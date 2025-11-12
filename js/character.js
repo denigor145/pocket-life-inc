@@ -1,5 +1,5 @@
 // character.js
 let character = {
-    endurance: 100,
+    endurance: 300,
     stressResistance: 100
 };
