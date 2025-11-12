@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Характеристики персонажа</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .character-screen {
+            text-align: center;
+            width: 100%;
+        }
+        h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            margin: 15px 0;
+        }
+        .stat-name {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            margin: 10px 0;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover {
+            background: #ff5252;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="character-screen">
+            <h1>Характеристики персонажа</h1>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-name">Выносливость</div>
+                    <div class="stat-value" id="enduranceValue">100</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-name">Стрессоустойчивость</div>
+                    <div class="stat-value" id="stressResistanceValue">100</div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="goToMainMenu()">В главное меню</button>
+        </div>
+    </div>
+
+    <script src="js/character.js"></script>
+    <script>
+        function goToMainMenu() {
+            window.location.href = 'index.html';
+        }
+
+        // Загружаем данные персонажа и отображаем
+        document.getElementById('enduranceValue').textContent = character.endurance;
+        document.getElementById('stressResistanceValue').textContent = character.stressResistance;
+    </script>
+</body>
+</html>
