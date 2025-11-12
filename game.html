@@ -177,30 +177,6 @@
             opacity: 0.8;
             margin-top: 2px;
         }
-        
-        /* Модальные окна */
-        .modal { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0,0,0,0.8); 
-            display: flex; 
-            align-items: center;
-            justify-content: center; 
-            z-index: 1000;
-        }
-        .modal-content { 
-            background: white; 
-            color: #333; 
-            padding: 30px;
-            border-radius: 20px; 
-            text-align: center; 
-            max-width: 300px; 
-            width: 90%;
-        }
-        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -243,24 +219,6 @@
             <span class="btn-main-text">2 аргумент</span>
             <span class="btn-percent">45%</span>
         </button>
-    </div>
-
-    <!-- Модальные окна -->
-    <div id="winModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>🎉 Победа!</h2>
-            <p>+10 золотых</p>
-            <p id="itemReward"></p>
-            <button class="btn-action" onclick="goToMainMenu()">В главное меню</button>
-        </div>
-    </div>
-
-    <div id="loseModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>💀 Поражение</h2>
-            <p id="loseReason"></p>
-            <button class="btn-action" onclick="goToMainMenu()">В главное меню</button>
-        </div>
     </div>
 
     <script src="js/character.js"></script>
@@ -349,19 +307,17 @@
         function checkGameEnd() {
             // Поражение если закончилась выносливость
             if (character.endurance <= 0) {
-                document.getElementById('loseReason').textContent = "Закончилась выносливость";
-                document.getElementById('loseModal').classList.remove('hidden');
+                window.location.href = `defeat.html?reason=Закончилась выносливость`;
                 return;
             }
             
             // Победа если здоровье соперника <= 0
             if (currentOpponent.health <= 0) {
-                document.getElementById('winModal').classList.remove('hidden');
+                window.location.href = `victory.html?id=${currentOpponent.id}`;
             } 
             // Поражение если здоровье соперника >= максимального
             else if (currentOpponent.health >= currentOpponent.maxHealth) {
-                document.getElementById('loseReason').textContent = "Соперник слишком силён";
-                document.getElementById('loseModal').classList.remove('hidden');
+                window.location.href = `defeat.html?reason=Соперник слишком силён`;
             }
         }
         
@@ -377,10 +333,6 @@
             document.getElementById('enduranceText').textContent = `${character.endurance}/100`;
             document.getElementById('stressFill').style.width = `${(character.stressResistance / 100) * 100}%`;
             document.getElementById('stressText').textContent = `${character.stressResistance}/100`;
-        }
-        
-        function goToMainMenu() {
-            window.location.href = 'index.html';
         }
         
         // Начинаем игру
