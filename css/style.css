@@ -124,3 +124,29 @@ h1 {
 .hidden {
     display: none !important;
 }
+
+.character-screen {
+    text-align: center;
+    width: 100%;
+}
+
+.stats {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    margin: 15px 0;
+}
+
+.stat-name {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+}
