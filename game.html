@@ -227,6 +227,7 @@
     <div id="loseModal" class="modal hidden">
         <div class="modal-content">
             <h2>💀 Поражение</h2>
+            <p id="loseReason"></p>
             <button class="btn-action" onclick="goToMainMenu()">В главное меню</button>
         </div>
     </div>
@@ -237,12 +238,12 @@
         const opponents = [
             {
                 name: "Воин",
-                maxHealth: 200,
+                maxHealth: 100,
                 health: 100
             },
             {
                 name: "Маг", 
-                maxHealth: 240,
+                maxHealth: 120,
                 health: 120
             }
         ];
@@ -315,9 +316,20 @@
         }
         
         function checkGameEnd() {
+            // Поражение если закончилась выносливость
+            if (character.endurance <= 0) {
+                document.getElementById('loseReason').textContent = "Закончилась выносливость";
+                document.getElementById('loseModal').classList.remove('hidden');
+                return;
+            }
+            
+            // Победа если здоровье соперника <= 0
             if (currentOpponent.health <= 0) {
                 document.getElementById('winModal').classList.remove('hidden');
-            } else if (currentOpponent.health >= currentOpponent.maxHealth) {
+            } 
+            // Поражение если здоровье соперника >= максимального
+            else if (currentOpponent.health >= currentOpponent.maxHealth) {
+                document.getElementById('loseReason').textContent = "Соперник слишком силён";
                 document.getElementById('loseModal').classList.remove('hidden');
             }
         }
@@ -331,7 +343,7 @@
             
             // Обновляем показатели персонажа
             document.getElementById('enduranceFill').style.width = `${(character.endurance / 100) * 100}%`;
-            document.getElementById('enduranceText').textContent = `${character.endurance}/300`;
+            document.getElementById('enduranceText').textContent = `${character.endurance}/100`;
             document.getElementById('stressFill').style.width = `${(character.stressResistance / 100) * 100}%`;
             document.getElementById('stressText').textContent = `${character.stressResistance}/100`;
         }
