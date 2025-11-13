@@ -294,6 +294,7 @@
         let playerSkills = [];
         const skillCooldowns = {};
         let globalCooldown = 0;
+        let lastUsedSkillId = null;
         
         // Инициализация Telegram (с проверкой на существование)
         if (window.Telegram && window.Telegram.WebApp) {
@@ -337,8 +338,8 @@
             const skill = playerSkills.find(s => s.id === skillId);
             if (!skill) return;
             
-            // Проверяем общий откат
-            if (globalCooldown > Date.now()) {
+            // Проверяем общий откат (для всех умений, кроме использованного)
+            if (globalCooldown > Date.now() && skillId !== lastUsedSkillId) {
                 return;
             }
             
@@ -369,10 +370,11 @@
                 }
             }
 
-            // Устанавливаем общий откат (3 секунды)
+            // Устанавливаем общий откат (3 секунды) для всех умений, КРОМЕ использованного
             globalCooldown = Date.now() + 3000;
+            lastUsedSkillId = skillId;
             
-            // Устанавливаем индивидуальный откат
+            // Устанавливаем индивидуальный откат для использованного умения
             skillCooldowns[skill.id] = Date.now() + (skill.cooldown * 1000);
 
             updateUI();
@@ -394,7 +396,9 @@
             }
             
             // Проверяем индивидуальный откат
-            if (skillCooldowns[skill.id] && skillCooldowns[skill.id] > Date.now()) {
+            const individualCooldownActive = skillCooldowns[skill.id] && skillCooldowns[skill.id] > Date.now();
+            
+            if (individualCooldownActive) {
                 button.disabled = true;
                 
                 // Добавляем overlay с отсчетом времени
@@ -407,16 +411,17 @@
                 button.disabled = false;
             }
             
+            // Проверяем общий откат (не применяется к использованному умению)
+            const globalCooldownActive = globalCooldown > Date.now();
+            if (globalCooldownActive && skillId !== lastUsedSkillId) {
+                button.disabled = true;
+            }
+            
             // Проверяем достаточно ли выносливости для использования
             if (character.endurance < skill.enduranceCost) {
                 button.style.opacity = '0.5';
             } else {
                 button.style.opacity = '1';
-            }
-            
-            // Блокируем кнопку, если действует общий откат
-            if (globalCooldown > Date.now()) {
-                button.disabled = true;
             }
         }
         
