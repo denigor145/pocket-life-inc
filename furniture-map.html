@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мебель - Экономический симулятор</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #8D6E63 0%, #6D4C41 100%);
+            min-height: 100vh; 
+            color: white; 
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px 0;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .map-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .top-area {
+            background: rgba(255,255,255,0.2);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .top-area:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.02);
+        }
+        .area-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .area-subtitle {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .main-grid {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .left-column, .right-column {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .center-space {
+            flex: 1;
+        }
+        
+        .area {
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.2);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+        }
+        .area:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.05);
+        }
+        .area-level {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+        .area-difficulty {
+            font-size: 10px;
+            opacity: 0.7;
+        }
+        
+        .exit-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .exit-btn:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>🛋️ Мебель</h1>
+        </div>
+        
+        <div class="map-container">
+            <div class="top-area" onclick="startGame('design_studio', 1)">
+                <div class="area-title">🎨 Дизайн-студия</div>
+                <div class="area-subtitle">Эксклюзив • Индивидуальные проекты</div>
+            </div>
+            
+            <div class="main-grid">
+                <div class="left-column">
+                    <div class="area" onclick="startGame('furniture_left', 1)">
+                        <div class="area-level">Салон Л1</div>
+                        <div class="area-difficulty">★ Эконом</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 2)">
+                        <div class="area-level">Салон Л2</div>
+                        <div class="area-difficulty">★ Эконом</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 3)">
+                        <div class="area-level">Салон Л3</div>
+                        <div class="area-difficulty">★★ Комфорт</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 4)">
+                        <div class="area-level">Салон Л4</div>
+                        <div class="area-difficulty">★★ Комфорт</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 5)">
+                        <div class="area-level">Салон Л5</div>
+                        <div class="area-difficulty">★★★ Бизнес</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 6)">
+                        <div class="area-level">Салон Л6</div>
+                        <div class="area-difficulty">★★★ Бизнес</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_left', 7)">
+                        <div class="area-level">Салон Л7</div>
+                        <div class="area-difficulty">★★★★ Премиум</div>
+                    </div>
+                </div>
+                
+                <div class="center-space"></div>
+                
+                <div class="right-column">
+                    <div class="area" onclick="startGame('furniture_right', 1)">
+                        <div class="area-level">Салон П1</div>
+                        <div class="area-difficulty">★ Эконом</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 2)">
+                        <div class="area-level">Салон П2</div>
+                        <div class="area-difficulty">★ Эконом</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 3)">
+                        <div class="area-level">Салон П3</div>
+                        <div class="area-difficulty">★★ Комфорт</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 4)">
+                        <div class="area-level">Салон П4</div>
+                        <div class="area-difficulty">★★ Комфорт</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 5)">
+                        <div class="area-level">Салон П5</div>
+                        <div class="area-difficulty">★★★ Бизнес</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 6)">
+                        <div class="area-level">Салон П6</div>
+                        <div class="area-difficulty">★★★ Бизнес</div>
+                    </div>
+                    <div class="area" onclick="startGame('furniture_right', 7)">
+                        <div class="area-level">Салон П7</div>
+                        <div class="area-difficulty">★★★★ Премиум</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="exit-btn" onclick="goBack()">
+            ← Выйти в торговый центр
+        </button>
+    </div>
+
+    <script>
+        function startGame(area, level) {
+            window.location.href = `game.html?department=furniture&area=${area}&level=${level}`;
+        }
+
+        function goBack() {
+            window.location.href = 'location-selection.html';
+        }
+    </script>
+</body>
+</html>
