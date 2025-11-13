@@ -5,311 +5,154 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Продуктовый магазин - Экономический симулятор</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            min-height: 100vh; 
-            color: white; 
-            padding: 20px;
-            position: relative;
+        /* ... существующие стили ... */
+        
+        /* Кнопки умений */
+        .skills-container {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            max-width: 400px;
+            z-index: 10;
         }
-        /* Тёмный overlay с частичным затемнением */
-        body::before {
-            content: '';
+        
+        .skill-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-size: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .skill-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            background: #45a049;
+        }
+        
+        .skill-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .skill-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .skill-name {
+            font-size: 9px;
+            line-height: 1.1;
+            text-align: center;
+        }
+        
+        .cooldown-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: -1;
-        }
-        
-        /* Заголовок локации */
-        .location-header {
-            position: fixed;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            z-index: 10;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 15px;
-            border-radius: 15px;
-        }
-
-        .location-header h2 {
-            font-size: 16px;
-            margin: 0;
-        }
-        
-        /* Аватарка соперника */
-        .opponent-avatar {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 100;
-            cursor: pointer;
-        }
-
-        .avatar-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.7);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            border: 2px solid rgba(255,255,255,0.3);
-            transition: transform 0.2s;
-        }
-
-        .avatar-circle:hover {
-            transform: scale(1.1);
-        }
-        
-        /* Показатели персонажа - занимают 1/3 экрана */
-        .player-stats {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 33.33%;
-            min-width: 150px;
-            max-width: 200px;
-            z-index: 10;
-        }
-        
-        .stat-container {
-            display: flex;
-            align-items: center;
-            margin: 8px 0;
-        }
-        
-        .stat-bar {
-            background: rgba(255,255,255,0.2);
-            height: 8px;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-            flex: 1;
-        }
-        
-        .stat-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        .endurance-fill {
-            background: linear-gradient(90deg, #FF9800, #FFB74D);
-        }
-        
-        .stress-fill {
-            background: linear-gradient(90deg, #2196F3, #64B5F6);
-        }
-        
-        .stat-text {
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-            min-width: 40px;
-            text-align: right;
-        }
-        
-        /* Полоса жизни соперника - на всю ширину с отступами */
-        .opponent-health {
-            position: fixed;
-            top: 80px;
-            left: 10px;
-            right: 10px;
-            width: calc(100% - 20px);
-            z-index: 10;
-        }
-        
-        .health-bar { 
-            background: rgba(255,255,255,0.2); 
-            height: 25px;
-            border-radius: 12px; 
-            position: relative; 
-            overflow: hidden;
-        }
-        
-        .health-fill { 
-            background: linear-gradient(90deg, #f44336, #ef5350); 
-            height: 100%; 
-            width: 100%; 
-            border-radius: 12px; 
-            transition: width 0.5s ease;
-        }
-        
-        .health-text { 
-            position: absolute; 
-            top: 50%; 
-            right: 15px;
-            transform: translateY(-50%); 
             font-size: 14px;
             font-weight: bold;
-        }
-        
-        /* Кнопки действий - на одной линии */
-        .action-buttons {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 10;
-        }
-        
-        .btn-action { 
-            background: #ff6b6b; 
-            color: white; 
-            border: none;
-            padding: 0;
-            font-size: 14px; 
-            border-radius: 12px;
-            cursor: pointer; 
-            width: 100px;
-            height: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-        
-        .btn-main-text {
-            font-size: 12px;
-            line-height: 1.2;
-        }
-        
-        .btn-percent {
-            font-size: 9px;
-            opacity: 0.8;
-            margin-top: 2px;
         }
     </style>
 </head>
 <body>
-    <!-- Заголовок локации -->
-    <div class="location-header">
-        <h2>🛒 Продуктовый магазин</h2>
-    </div>
-
-    <!-- Аватарка соперника -->
-    <div class="opponent-avatar" onclick="showOpponentInfo()">
-        <div class="avatar-circle" id="opponentAvatar">👩‍💼</div>
-    </div>
+    <!-- ... существующая разметка ... -->
     
-    <!-- Показатели персонажа -->
-    <div class="player-stats">
-        <div class="stat-container">
-            <div class="stat-bar">
-                <div class="stat-fill endurance-fill" id="enduranceFill" style="width: 100%"></div>
-            </div>
-            <span class="stat-text" id="enduranceText">100/100</span>
-        </div>
-        <div class="stat-container">
-            <div class="stat-bar">
-                <div class="stat-fill stress-fill" id="stressFill" style="width: 100%"></div>
-            </div>
-            <span class="stat-text" id="stressText">100/100</span>
-        </div>
-    </div>
-    
-    <!-- Полоса жизни соперника -->
-    <div class="opponent-health">
-        <div class="health-bar">
-            <div class="health-fill" id="healthFill"></div>
-            <span class="health-text" id="healthText">100/100</span>
-        </div>
-    </div>
-    
-    <!-- Кнопки действий -->
-    <div class="action-buttons">
-        <button class="btn-action" onclick="performAction('argument1')">
-            <span class="btn-main-text">1 аргумент</span>
-            <span class="btn-percent">55%</span>
-        </button>
-        <button class="btn-action" onclick="performAction('argument2')">
-            <span class="btn-main-text">2 аргумент</span>
-            <span class="btn-percent">45%</span>
-        </button>
+    <!-- Контейнер для умений -->
+    <div class="skills-container" id="skillsContainer">
+        <!-- Умения будут загружены через JavaScript -->
     </div>
 
     <script src="js/character.js"></script>
     <script src="js/opponents-data.js"></script>
+    <script src="js/skills-data.js"></script>
     <script>
-        // Характеристики аргументов
-        const argumentsData = {
-            argument1: {
-                power: 20,
-                enduranceCost: 10,
-                successChance: 0.55
-            },
-            argument2: {
-                power: 30,
-                enduranceCost: 15,
-                successChance: 0.45
+        // Загружаем сохраненные умения
+        function loadPlayerSkills() {
+            const savedSkills = localStorage.getItem('playerSkills');
+            if (savedSkills) {
+                const parsedSkills = JSON.parse(savedSkills);
+                // Обновляем наш массив skills сохраненными данными
+                parsedSkills.forEach(savedSkill => {
+                    const skillIndex = skills.findIndex(s => s.id === savedSkill.id);
+                    if (skillIndex !== -1) {
+                        skills[skillIndex] = { ...skills[skillIndex], ...savedSkill };
+                    }
+                });
             }
-        };
-        
+            return skills.filter(skill => skill.equipped);
+        }
+
         let currentOpponent = null;
+        let playerSkills = [];
+        const skillCooldowns = {};
         
-        // Инициализация Telegram (с проверкой на существование)
-        if (window.Telegram && window.Telegram.WebApp) {
-            let tg = window.Telegram.WebApp;
-            tg.expand();
-        }
-        
-        function selectRandomOpponent() {
-            const randomIndex = Math.floor(Math.random() * opponents.length);
-            currentOpponent = {...opponents[randomIndex]};
+        function displaySkills() {
+            const skillsContainer = document.getElementById('skillsContainer');
+            skillsContainer.innerHTML = '';
             
-            // Меняем фон в зависимости от соперника
-            document.body.style.backgroundImage = `url('images/${currentOpponent.background}')`;
-            
-            updateUI();
-            updateOpponentAvatar();
+            playerSkills.forEach(skill => {
+                const button = document.createElement('button');
+                button.className = 'skill-btn';
+                button.id = `skill-${skill.id}`;
+                button.innerHTML = `
+                    <div class="skill-icon">${skill.icon}</div>
+                    <div class="skill-name">${skill.name}</div>
+                `;
+                
+                button.onclick = () => performSkill(skill.id);
+                skillsContainer.appendChild(button);
+                
+                updateSkillButton(skill.id);
+            });
         }
         
-        function updateOpponentAvatar() {
-            if (currentOpponent) {
-                document.getElementById('opponentAvatar').textContent = currentOpponent.avatar;
-            }
-        }
-        
-        function showOpponentInfo() {
-            if (currentOpponent) {
-                window.location.href = `opponent-info.html?id=${currentOpponent.id}`;
-            }
-        }
-        
-        function performAction(argumentType) {
+        function performSkill(skillId) {
             if (!currentOpponent) return;
             
-            const argument = argumentsData[argumentType];
+            const skill = playerSkills.find(s => s.id === skillId);
+            if (!skill) return;
+            
+            // Проверяем cooldown
+            if (skillCooldowns[skill.id] && skillCooldowns[skill.id] > Date.now()) {
+                return;
+            }
             
             // Проверяем достаточно ли выносливости
-            if (character.endurance < argument.enduranceCost) {
+            if (character.endurance < skill.enduranceCost) {
                 alert("Недостаточно выносливости!");
                 return;
             }
             
             // Тратим выносливость
-            character.endurance -= argument.enduranceCost;
+            character.endurance -= skill.enduranceCost;
             if (character.endurance < 0) character.endurance = 0;
             
-            const success = Math.random() <= argument.successChance;
+            const success = Math.random() <= skill.successChance;
 
             if (success) {
-                currentOpponent.health -= argument.power;
+                currentOpponent.health -= skill.power;
                 if (currentOpponent.health < 0) currentOpponent.health = 0;
             } else {
                 currentOpponent.health += 20;
@@ -318,43 +161,68 @@
                 }
             }
 
+            // Устанавливаем cooldown (3-5 секунд в зависимости от силы умения)
+            const cooldown = 3000 + (skill.power * 100); // Базовые 3 секунды + доп время за силу
+            skillCooldowns[skill.id] = Date.now() + cooldown;
+
             updateUI();
             checkGameEnd();
+            updateSkillButton(skill.id);
         }
         
-        function checkGameEnd() {
-            // Поражение если закончилась выносливость
-            if (character.endurance <= 0) {
-                window.location.href = `defeat.html?reason=Закончилась выносливость`;
-                return;
+        function updateSkillButton(skillId) {
+            const button = document.getElementById(`skill-${skillId}`);
+            const skill = playerSkills.find(s => s.id === skillId);
+            
+            if (!button) return;
+            
+            // Убираем старый cooldown overlay
+            const oldOverlay = button.querySelector('.cooldown-overlay');
+            if (oldOverlay) {
+                oldOverlay.remove();
             }
             
-            // Победа если здоровье соперника <= 0
-            if (currentOpponent.health <= 0) {
-                window.location.href = `victory.html?id=${currentOpponent.id}`;
-            } 
-            // Поражение если здоровье соперника >= максимального
-            else if (currentOpponent.health >= currentOpponent.maxHealth) {
-                window.location.href = `defeat.html?reason=Соперник слишком силён`;
+            if (skillCooldowns[skill.id] && skillCooldowns[skill.id] > Date.now()) {
+                button.disabled = true;
+                
+                // Добавляем overlay с отсчетом времени
+                const overlay = document.createElement('div');
+                overlay.className = 'cooldown-overlay';
+                const remaining = Math.ceil((skillCooldowns[skill.id] - Date.now()) / 1000);
+                overlay.textContent = remaining;
+                button.appendChild(overlay);
+            } else {
+                button.disabled = false;
+            }
+            
+            // Проверяем достаточно ли выносливости для использования
+            if (character.endurance < skill.enduranceCost) {
+                button.style.opacity = '0.5';
+            } else {
+                button.style.opacity = '1';
             }
         }
         
-        function updateUI() {
-            if (!currentOpponent) return;
-
-            // Обновляем здоровье соперника
-            document.getElementById('healthFill').style.width = `${(currentOpponent.health / currentOpponent.maxHealth) * 100}%`;
-            document.getElementById('healthText').textContent = `${currentOpponent.health}/${currentOpponent.maxHealth}`;
-            
-            // Обновляем показатели персонажа
-            document.getElementById('enduranceFill').style.width = `${(character.endurance / 100) * 100}%`;
-            document.getElementById('enduranceText').textContent = `${character.endurance}/100`;
-            document.getElementById('stressFill').style.width = `${(character.stressResistance / 100) * 100}%`;
-            document.getElementById('stressText').textContent = `${character.stressResistance}/100`;
+        function updateAllSkillButtons() {
+            playerSkills.forEach(skill => {
+                updateSkillButton(skill.id);
+            });
         }
         
-        // Начинаем игру
-        selectRandomOpponent();
+        // Обновляем кнопки каждую секунду
+        setInterval(updateAllSkillButtons, 1000);
+        
+        // Инициализация игры
+        function initGame() {
+            playerSkills = loadPlayerSkills();
+            selectRandomOpponent();
+            displaySkills();
+        }
+        
+        // Запускаем игру
+        initGame();
+        
+        // ... остальные функции (selectRandomOpponent, updateUI, checkGameEnd и т.д.)
     </script>
 </body>
 </html>
