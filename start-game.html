@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Выбор локации - Экономический симулятор</title>
+    <title>Карта города - Экономический симулятор</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -21,12 +21,12 @@
             align-items: center; 
             justify-content: center;
         }
-        .location-selection { 
+        .city-map { 
             text-align: center; 
             width: 100%; 
         }
         h1 { 
-            margin-bottom: 40px; 
+            margin-bottom: 30px; 
             font-size: 24px; 
         }
         .location-btn { 
@@ -38,7 +38,7 @@
             border-radius: 25px;
             cursor: pointer; 
             width: 100%; 
-            margin: 15px 0;
+            margin: 8px 0;
             transition: all 0.3s;
             display: flex;
             align-items: center;
@@ -56,7 +56,7 @@
         }
         .btn-back {
             background: #6b6bff;
-            margin-top: 30px;
+            margin-top: 25px;
         }
         .location-icon {
             font-size: 20px;
@@ -69,28 +69,63 @@
         .description {
             font-size: 14px;
             opacity: 0.8;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+        }
+        .locations-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="location-selection">
-            <h1>🎮 Начать игру</h1>
-            <p class="description">Выберите место для начала торговли</p>
+        <div class="city-map">
+            <h1>🗺️ Карта города</h1>
+            <p class="description">Выберите район для начала торговли</p>
             
-            <!-- Торговый центр -->
-            <button class="location-btn" onclick="selectLocation('mall')">
-                <span class="location-icon">🏬</span>
-                Торговый центр
-            </button>
-            
-            <!-- Жилой квартал -->
-            <button class="location-btn" disabled>
-                <span class="location-icon">🏘️</span>
-                Жилой квартал
-                <div class="coming-soon">скоро</div>
-            </button>
+            <div class="locations-grid">
+                <!-- Торговый центр -->
+                <button class="location-btn" onclick="selectLocation('mall')">
+                    <span class="location-icon">🏬</span>
+                    Торговый центр
+                </button>
+                
+                <!-- Жилой квартал -->
+                <button class="location-btn" disabled>
+                    <span class="location-icon">🏘️</span>
+                    Жилой квартал
+                    <div class="coming-soon">скоро</div>
+                </button>
+
+                <!-- Бизнес центр -->
+                <button class="location-btn" disabled>
+                    <span class="location-icon">🏢</span>
+                    Бизнес центр
+                    <div class="coming-soon">скоро</div>
+                </button>
+
+                <!-- Администрация -->
+                <button class="location-btn" disabled>
+                    <span class="location-icon">🏛️</span>
+                    Администрация
+                    <div class="coming-soon">скоро</div>
+                </button>
+
+                <!-- Вокзал -->
+                <button class="location-btn" disabled>
+                    <span class="location-icon">🚉</span>
+                    Вокзал
+                    <div class="coming-soon">скоро</div>
+                </button>
+
+                <!-- Промышленная зона -->
+                <button class="location-btn" disabled>
+                    <span class="location-icon">🏭</span>
+                    Промышленная зона
+                    <div class="coming-soon">скоро</div>
+                </button>
+            </div>
 
             <button class="location-btn btn-back" onclick="goToMainMenu()">
                 <span class="location-icon">←</span>
@@ -103,9 +138,21 @@
             if (locationType === 'mall') {
                 window.location.href = 'location-selection.html';
             }
-            // Для жилого квартала можно будет добавить позже
+            // Для других локаций можно будет добавить позже
             // else if (locationType === 'residential') {
             //     window.location.href = 'residential-map.html';
+            // }
+            // else if (locationType === 'business') {
+            //     window.location.href = 'business-map.html';
+            // }
+            // else if (locationType === 'administration') {
+            //     window.location.href = 'administration-map.html';
+            // }
+            // else if (locationType === 'station') {
+            //     window.location.href = 'station-map.html';
+            // }
+            // else if (locationType === 'industrial') {
+            //     window.location.href = 'industrial-map.html';
             // }
         }
 
