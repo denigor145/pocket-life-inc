@@ -226,19 +226,18 @@
             font-weight: bold;
         }
         
-        .global-cooldown-overlay {
+        .global-cooldown-indicator {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 5;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            z-index: 10;
             display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
         }
     </style>
 </head>
@@ -248,9 +247,9 @@
         <h2>🛒 Продуктовый магазин</h2>
     </div>
 
-    <!-- Общий откат -->
-    <div class="global-cooldown-overlay" id="globalCooldownOverlay">
-        <div>Общий откат: <span id="globalCooldownTimer">3</span>с</div>
+    <!-- Индикатор общего отката -->
+    <div class="global-cooldown-indicator" id="globalCooldownIndicator">
+        Общий откат: <span id="globalCooldownTimer">0</span>с
     </div>
 
     <!-- Аватарка соперника -->
@@ -378,8 +377,8 @@
 
             updateUI();
             checkGameEnd();
-            updateSkillButton(skill.id);
-            updateGlobalCooldown();
+            updateAllSkillButtons();
+            updateGlobalCooldownIndicator();
         }
         
         function updateSkillButton(skillId) {
@@ -414,18 +413,23 @@
             } else {
                 button.style.opacity = '1';
             }
+            
+            // Блокируем кнопку, если действует общий откат
+            if (globalCooldown > Date.now()) {
+                button.disabled = true;
+            }
         }
         
-        function updateGlobalCooldown() {
-            const overlay = document.getElementById('globalCooldownOverlay');
+        function updateGlobalCooldownIndicator() {
+            const indicator = document.getElementById('globalCooldownIndicator');
             const timer = document.getElementById('globalCooldownTimer');
             
             if (globalCooldown > Date.now()) {
-                overlay.style.display = 'flex';
+                indicator.style.display = 'block';
                 const remaining = Math.ceil((globalCooldown - Date.now()) / 1000);
                 timer.textContent = remaining;
             } else {
-                overlay.style.display = 'none';
+                indicator.style.display = 'none';
             }
         }
         
@@ -433,7 +437,7 @@
             playerSkills.forEach(skill => {
                 updateSkillButton(skill.id);
             });
-            updateGlobalCooldown();
+            updateGlobalCooldownIndicator();
         }
         
         function selectRandomOpponent() {
