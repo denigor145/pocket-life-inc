@@ -49,22 +49,12 @@
             background: #ff5252; 
             transform: scale(1.05);
         }
-        .location-btn:disabled {
-            background: #cccccc;
-            cursor: not-allowed;
-            transform: none;
-        }
         .btn-back {
             background: #6b6bff;
             margin-top: 25px;
         }
         .location-icon {
             font-size: 20px;
-        }
-        .coming-soon {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 5px;
         }
         .description {
             font-size: 14px;
@@ -92,10 +82,9 @@
                 </button>
                 
                 <!-- Жилой квартал -->
-                <button class="location-btn" disabled>
+                <button class="location-btn" onclick="selectLocation('residential')">
                     <span class="location-icon">🏘️</span>
                     Жилой квартал
-                    <div class="coming-soon">скоро</div>
                 </button>
 
                 <!-- Бизнес центр -->
@@ -136,6 +125,9 @@
             if (locationType === 'mall') {
                 window.location.href = 'location-selection.html';
             }
+            else if (locationType === 'residential') {
+                window.location.href = 'residential-map.html';
+            }
             else if (locationType === 'station') {
                 window.location.href = 'station-map.html';
             }
@@ -143,9 +135,6 @@
                 window.location.href = 'industrial-map.html';
             }
             // Для других локаций можно будет добавить позже
-            // else if (locationType === 'residential') {
-            //     window.location.href = 'residential-map.html';
-            // }
             // else if (locationType === 'business') {
             //     window.location.href = 'business-map.html';
             // }
