@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бизнес-центр - Экономический симулятор</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            min-height: 100vh; 
+            color: white; 
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px 0;
+        }
+        .page-header h1 {
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+        
+        .locations-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .location-btn {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: none;
+            padding: 25px 15px;
+            font-size: 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            min-height: 120px;
+        }
+        
+        .location-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: scale(1.05);
+        }
+        
+        .location-icon {
+            font-size: 28px;
+        }
+        
+        .location-name {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .location-description {
+            font-size: 12px;
+            opacity: 0.8;
+            text-align: center;
+        }
+        
+        .exit-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        .exit-btn:hover {
+            background: #ff5252;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>🏢 Бизнес-центр</h1>
+            <div class="subtitle">Деловые услуги и финансы</div>
+        </div>
+        
+        <div class="locations-grid">
+            <!-- Офис -->
+            <button class="location-btn" onclick="startLocation('office')">
+                <span class="location-icon">💼</span>
+                <span class="location-name">Офис</span>
+                <span class="location-description">Деловые переговоры</span>
+            </button>
+            
+            <!-- Биржа -->
+            <button class="location-btn" onclick="startLocation('exchange')">
+                <span class="location-icon">📈</span>
+                <span class="location-name">Биржа</span>
+                <span class="location-description">Торговля акциями</span>
+            </button>
+            
+            <!-- Лицензирование -->
+            <button class="location-btn" onclick="startLocation('licensing')">
+                <span class="location-icon">📋</span>
+                <span class="location-name">Лицензирование</span>
+                <span class="location-description">Оформление документов</span>
+            </button>
+            
+            <!-- Биржа труда -->
+            <button class="location-btn" onclick="startLocation('job_center')">
+                <span class="location-icon">👥</span>
+                <span class="location-name">Биржа труда</span>
+                <span class="location-description">Подбор персонала</span>
+            </button>
+        </div>
+        
+        <button class="exit-btn" onclick="goBack()">
+            ← Вернуться в город
+        </button>
+    </div>
+
+    <script>
+        function startLocation(locationType) {
+            // Все бизнес-локации активны и ведут на игру
+            window.location.href = `game.html?area=business&location=${locationType}`;
+        }
+
+        function goBack() {
+            window.location.href = 'start-game.html';
+        }
+    </script>
+</body>
+</html>
