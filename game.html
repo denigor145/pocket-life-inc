@@ -289,12 +289,16 @@
     <script src="js/character.js"></script>
     <script src="js/opponents-data.js"></script>
     <script src="js/skills-data.js"></script>
+    <script src="js/inventory.js"></script>
     <script>
         let currentOpponent = null;
         let playerSkills = [];
         const skillCooldowns = {};
         let globalCooldown = 0;
         let lastUsedSkillId = null;
+        
+        // Инициализация инвентаря
+        const playerInventory = new Inventory();
         
         // Инициализация Telegram (с проверкой на существование)
         if (window.Telegram && window.Telegram.WebApp) {
