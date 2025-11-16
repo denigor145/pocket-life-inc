@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Торговый центр - Экономический симулятор</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; 
+            color: white; 
+        }
+        .container { 
+            max-width: 400px; 
+            margin: 0 auto; 
+            padding: 20px;
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .entrance-menu { 
+            text-align: center; 
+            width: 100%; 
+        }
+        h1 { 
+            margin-bottom: 40px; 
+            font-size: 24px; 
+        }
+        .option-btn { 
+            background: #ff6b6b; 
+            color: white; 
+            border: none;
+            padding: 15px 30px; 
+            font-size: 16px; 
+            border-radius: 25px;
+            cursor: pointer; 
+            width: 100%; 
+            margin: 8px 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .option-btn:hover { 
+            background: #ff5252; 
+            transform: scale(1.05);
+        }
+        .option-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .option-btn:disabled:hover {
+            background: #cccccc;
+            transform: none;
+        }
+        .btn-back {
+            background: #6b6bff;
+            margin-top: 30px;
+        }
+        .option-icon {
+            font-size: 20px;
+        }
+        .description {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="entrance-menu">
+            <h1>🏬 Торговый центр</h1>
+            <p class="description">Выберите действие</p>
+            
+            <div class="options-grid">
+                <!-- Найти работу - АКТИВНА -->
+                <button class="option-btn" onclick="findJob()">
+                    <span class="option-icon">💼</span>
+                    Найти работу
+                </button>
+                
+                <!-- Купить товары - НЕ АКТИВНА -->
+                <button class="option-btn" disabled onclick="buyGoods()">
+                    <span class="option-icon">🛍️</span>
+                    Купить товары
+                    <span style="font-size: 12px; margin-left: auto;">🔒</span>
+                </button>
+                
+                <!-- Открыть магазин - НЕ АКТИВНА -->
+                <button class="option-btn" disabled onclick="openShop()">
+                    <span class="option-icon">🏪</span>
+                    Открыть магазин
+                    <span style="font-size: 12px; margin-left: auto;">🔒</span>
+                </button>
+            </div>
+
+            <button class="option-btn btn-back" onclick="goBack()">
+                <span class="option-icon">←</span>
+                Назад
+            </button>
+        </div>
+    </div>
+    <script>
+        function findJob() {
+            // Переход на текущую локацию торгового центра
+            window.location.href = 'location-selection.html';
+        }
+
+        function buyGoods() {
+            // Пока не активно
+            alert('Функция "Купить товары" будет доступна в следующем обновлении!');
+        }
+
+        function openShop() {
+            // Пока не активно
+            alert('Функция "Открыть магазин" будет доступна в следующем обновлении!');
+        }
+
+        function goBack() {
+            window.location.href = 'start-game.html';
+        }
+    </script>
+</body>
+</html>
