@@ -154,6 +154,8 @@
             transition: width 0.3s ease;
             border-radius: 0;
             position: relative;
+            /* Градиент будет устанавливаться скриптом */
+            background: linear-gradient(90deg, #f44336, #d32f2f); /* Красный по умолчанию */
         }
 
         /* Эффект блеска поверх полосы */
@@ -291,6 +293,22 @@
         .exit-btn:hover {
             background: #ff5252;
             transform: translateX(-50%) scale(1.05);
+        }
+
+        /* Анимация для критического здоровья */
+        @keyframes criticalPulse {
+            0% { 
+                filter: brightness(1);
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            }
+            50% { 
+                filter: brightness(1.3);
+                box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+            }
+            100% { 
+                filter: brightness(1);
+                box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            }
         }
     </style>
 </head>
@@ -553,51 +571,42 @@
         }
         
         // Функция для обновления цвета полосы здоровья (ИСПРАВЛЕННАЯ)
-function updateHealthBarColor() {
-    if (!currentOpponent) return;
-    
-    const healthPercent = currentOpponent.health / currentOpponent.maxHealth;
-    const healthFill = document.getElementById('healthFill');
-    
-    // ИНВЕРТИРОВАННЫЙ ПЕРЕХОД: красный (100%) -> зеленый (0%)
-    // 120° (зеленый) -> 0° (красный)
-    const hue = (1 - healthPercent) * 120; // Инвертируем healthPercent
-    
-    const saturation = 85;
-    const lightness = 45;
-    
-    const startColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    const endColor = `hsl(${hue}, ${saturation}%, ${lightness + 10}%)`;
-    
-    healthFill.style.background = `linear-gradient(90deg, ${startColor}, ${endColor})`;
-    
-    // Пульсация при критическом здоровье (теперь при healthPercent < 0.15)
-    if (healthPercent < 0.15) {
-        healthFill.style.animation = 'criticalPulse 0.8s infinite';
-    } else {
-        healthFill.style.animation = 'none';
-    }
-}
-
-        // Добавляем стили для анимации
-        const healthBarStyle = document.createElement('style');
-        healthBarStyle.textContent = `
-            @keyframes criticalPulse {
-                0% { 
-                    filter: brightness(1);
-                    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-                }
-                50% { 
-                    filter: brightness(1.3);
-                    box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-                }
-                100% { 
-                    filter: brightness(1);
-                    box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-                }
+        function updateHealthBarColor() {
+            if (!currentOpponent) return;
+            
+            const healthPercent = currentOpponent.health / currentOpponent.maxHealth;
+            const healthFill = document.getElementById('healthFill');
+            
+            // ПРАВИЛЬНАЯ ЛОГИКА: красный (100%) -> зеленый (0%)
+            let startColor, endColor;
+            
+            if (healthPercent > 0.7) {
+                // 70%-100%: Красный
+                startColor = '#f44336';
+                endColor = '#d32f2f';
+            } else if (healthPercent > 0.4) {
+                // 40%-70%: Оранжевый
+                startColor = '#FF9800';
+                endColor = '#F57C00';
+            } else if (healthPercent > 0.2) {
+                // 20%-40%: Желтый
+                startColor = '#FFC107';
+                endColor = '#FFA000';
+            } else {
+                // 0%-20%: Зеленый
+                startColor = '#4CAF50';
+                endColor = '#388E3C';
             }
-        `;
-        document.head.appendChild(healthBarStyle);
+            
+            healthFill.style.background = `linear-gradient(90deg, ${startColor}, ${endColor})`;
+            
+            // Пульсация при критическом здоровье (зеленый цвет)
+            if (healthPercent < 0.15) {
+                healthFill.style.animation = 'criticalPulse 0.8s infinite';
+            } else {
+                healthFill.style.animation = 'none';
+            }
+        }
         
         function selectRandomOpponent() {
             const randomIndex = Math.floor(Math.random() * opponents.length);
