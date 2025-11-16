@@ -105,12 +105,13 @@
                 </button>
             </div>
 
-            <button class="location-btn btn-back" onclick="goToMallEntrance()">
-    <span class="location-icon">←</span>
-    Назад в торговый центр
+            <button class="option-btn btn-back" onclick="goBack()">
+                <span class="option-icon">←</span>
+                Назад
             </button>
         </div>
     </div>
+
     <script>
         function findJob() {
             // Переход на текущую локацию торгового центра
@@ -127,8 +128,9 @@
             alert('Функция "Открыть магазин" будет доступна в следующем обновлении!');
         }
 
-        function goToMallEntrance() {
-        window.location.href = 'mall-entrance.html';
+        function goBack() {
+            window.location.href = 'start-game.html';
+        }
     </script>
 </body>
 </html>
