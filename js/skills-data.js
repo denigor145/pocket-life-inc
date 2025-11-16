@@ -7,7 +7,7 @@ const skills = [
         description: "Базовый навык убеждения",
         power: 20,
         enduranceCost: 10,
-        successChance: 0.55,
+        successChance: 0.85,
         level: 1,
         maxLevel: 5,
         equipped: true,
