@@ -89,7 +89,11 @@
     </div>
 
     <script src="js/opponents-data.js"></script>
+    <script src="js/inventory.js"></script>
     <script>
+        // Инициализация инвентаря
+        const playerInventory = new Inventory();
+        
         function getOpponentById(id) {
             return opponents.find(opponent => opponent.id === parseInt(id));
         }
@@ -99,7 +103,11 @@
             const opponentId = urlParams.get('id');
             const opponent = getOpponentById(opponentId);
 
-            if (!opponent) return;
+            if (!opponent) {
+                // Если нет ID соперника, показываем стандартные награды
+                showDefaultRewards();
+                return;
+            }
 
             const rewardsList = document.getElementById('rewardsList');
             let totalMoney = 0;
@@ -127,7 +135,7 @@
                         const itemElement = document.createElement('div');
                         itemElement.className = 'reward-item';
                         itemElement.innerHTML = `
-                            <span>${getItemIcon(drop.name)} ${drop.name}</span>
+                            <span>${getItemIcon(drop.name)} ${getItemDisplayName(drop.name)}</span>
                             <span>+1</span>
                         `;
                         rewardsList.appendChild(itemElement);
@@ -138,8 +146,26 @@
             // Показываем общую сумму
             document.getElementById('totalReward').textContent = `Всего: ${totalMoney} денег`;
 
-            // Сохраняем награды (можно сохранить в localStorage или отправить на сервер)
+            // Сохраняем награды в инвентарь
             saveRewards(totalMoney, earnedItems);
+        }
+
+        function showDefaultRewards() {
+            const rewardsList = document.getElementById('rewardsList');
+            const totalMoney = 50; // Базовая награда
+            
+            const moneyElement = document.createElement('div');
+            moneyElement.className = 'reward-item';
+            moneyElement.innerHTML = `
+                <span>💰 Деньги</span>
+                <span>+${totalMoney}</span>
+            `;
+            rewardsList.appendChild(moneyElement);
+            
+            document.getElementById('totalReward').textContent = `Всего: ${totalMoney} денег`;
+            
+            // Сохраняем базовую награду
+            playerInventory.addMoney(totalMoney);
         }
 
         function getItemIcon(itemName) {
@@ -147,23 +173,47 @@
                 'трава': '🌿',
                 'веревка': '🪢',
                 'вода': '💧',
-                'бумага': '📄'
+                'бумага': '📄',
+                'подкова': '🧲',
+                'золото': '🥇'
             };
             return icons[itemName] || '📦';
         }
 
+        function getItemDisplayName(itemName) {
+            const names = {
+                'трава': 'Трава',
+                'веревка': 'Веревка',
+                'вода': 'Вода',
+                'бумага': 'Бумага',
+                'подкова': 'Подкова',
+                'золото': 'Золото'
+            };
+            return names[itemName] || itemName;
+        }
+
         function saveRewards(money, items) {
-            // Здесь можно сохранить награды в localStorage или отправить на сервер
-            console.log('Награды:', { money, items });
-            // localStorage.setItem('playerMoney', money);
-            // localStorage.setItem('playerItems', JSON.stringify(items));
+            // Добавляем деньги в инвентарь
+            playerInventory.addMoney(money);
+            
+            // Добавляем предметы в инвентарь
+            items.forEach(item => {
+                playerInventory.addItem(item.name, 1);
+            });
+            
+            console.log('Награды сохранены в инвентарь:', { money, items });
         }
 
         function playAgain() {
             // Возвращаемся к игре с тем же соперником или случайным
             const urlParams = new URLSearchParams(window.location.search);
             const opponentId = urlParams.get('id');
-            window.location.href = `game.html?id=${opponentId}`;
+            
+            if (opponentId) {
+                window.location.href = `game.html?id=${opponentId}`;
+            } else {
+                window.location.href = 'game.html';
+            }
         }
 
         function goToMainMenu() {
