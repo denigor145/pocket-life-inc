@@ -93,6 +93,8 @@ class Inventory {
         const moneyElement = document.getElementById('moneyCount');
         const itemsContainer = document.getElementById('itemsContainer');
         const moneyDisplay = document.getElementById('moneyDisplay');
+        const currentMoney = document.getElementById('currentMoney');
+        const moneyInfo = document.getElementById('moneyInfo');
         
         if (moneyElement) {
             moneyElement.textContent = this.money + ' ₽';
@@ -100,6 +102,14 @@ class Inventory {
         
         if (moneyDisplay) {
             moneyDisplay.textContent = this.money + ' ₽';
+        }
+        
+        if (currentMoney) {
+            currentMoney.textContent = this.money;
+        }
+        
+        if (moneyInfo) {
+            moneyInfo.textContent = 'Баланс: ' + this.money + ' ₽';
         }
         
         if (itemsContainer) {
@@ -129,6 +139,7 @@ class Inventory {
                         <div class="item-icon">${this.getItemIcon(itemName)}</div>
                         <div class="item-name">${this.getItemDisplayName(itemName)}</div>
                         <div class="item-count">${quantity}</div>
+                        <div class="item-sell-price">${this.getSellPrice(itemName)} ₽</div>
                     </div>
                 `).join('')}
             </div>
@@ -248,7 +259,13 @@ class Inventory {
             'mirror': 'Внешний вид + к уверенности',
             'shoe_rack': 'Хранение обуви',
             'carpet': 'Уют и комфорт',
-            'lamp': 'Освещение + к настроению'
+            'lamp': 'Освещение + к настроению',
+            'трава': 'Полезное растение',
+            'веревка': 'Прочная веревка',
+            'вода': 'Чистая вода',
+            'бумага': 'Бумага для записей',
+            'подкова': 'Приносит удачу',
+            'золото': 'Ценный металл'
         };
         return descriptions[itemName] || 'Полезный предмет для вашей квартиры';
     }
@@ -281,6 +298,18 @@ class Inventory {
         return prices[itemName] || 1000;
     }
 
+    // Получение цены продажи предмета
+    getSellPrice(itemName) {
+        // Для предметов из магазина - 50% от цены покупки
+        const buyPrice = this.getItemPrice(itemName);
+        if (buyPrice > 0) {
+            return Math.floor(buyPrice * 0.5);
+        }
+        
+        // Для дропа с соперников - фиксированная цена 50 денег
+        return 50;
+    }
+
     // Проверка возможности покупки
     canAfford(itemName) {
         const price = this.getItemPrice(itemName);
@@ -297,6 +326,18 @@ class Inventory {
             return true;
         }
         return false;
+    }
+
+    // Продажа предмета
+    sellItem(itemName) {
+        if (!this.hasItem(itemName)) {
+            return false;
+        }
+        
+        const sellPrice = this.getSellPrice(itemName);
+        this.removeItem(itemName, 1);
+        this.addMoney(sellPrice);
+        return true;
     }
 
     // Получение статистики инвентаря
@@ -324,6 +365,18 @@ class Inventory {
         return totalValue;
     }
 
+    // Расчет общей стоимости продажи
+    calculateTotalSellValue() {
+        let totalSellValue = 0;
+        
+        for (const [itemName, quantity] of Object.entries(this.items)) {
+            const sellPrice = this.getSellPrice(itemName);
+            totalSellValue += sellPrice * quantity;
+        }
+        
+        return totalSellValue;
+    }
+
     // Очистка инвентаря (для отладки)
     clear() {
         this.money = 0;
@@ -338,6 +391,21 @@ class Inventory {
         this.addItem('table', 1);
         this.addItem('bed', 1);
         this.addItem('kettle', 1);
+    }
+
+    // Продать все предметы
+    sellAllItems() {
+        let totalEarned = 0;
+        const itemsToSell = { ...this.items };
+        
+        for (const [itemName, quantity] of Object.entries(itemsToSell)) {
+            const sellPrice = this.getSellPrice(itemName);
+            totalEarned += sellPrice * quantity;
+            this.removeItem(itemName, quantity);
+        }
+        
+        this.addMoney(totalEarned);
+        return totalEarned;
     }
 }
 
@@ -362,5 +430,15 @@ function addTestItems() {
         window.playerInventory.addItem('computer', 1);
         window.playerInventory.addItem('трава', 3);
         window.playerInventory.addItem('золото', 2);
+        window.playerInventory.addItem('веревка', 5);
+        window.playerInventory.addItem('подкова', 1);
+    }
+}
+
+// Функция для быстрой продажи всех предметов (для отладки)
+function sellAllDebug() {
+    if (window.playerInventory) {
+        const earned = window.playerInventory.sellAllItems();
+        alert('Продано всех предметов на сумму: ' + earned + ' ₽');
     }
 }
