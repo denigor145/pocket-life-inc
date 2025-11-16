@@ -111,11 +111,11 @@
         </div>
         
         <div class="locations-grid">
-            <!-- Жилой комплекс -->
-             <button class="location-btn" onclick="goToApartment()">
-                <span class="location-icon">🏢</span>
-                <span class="location-name">Жилой комплекс</span>
-                <span class="location-description">Многоквартирные дома</span>
+            <!-- Жилой комплекс - ВЕДЁТ В КВАРТИРУ -->
+            <button class="location-btn" onclick="goToApartment()">
+                <span class="location-icon">🏠</span>
+                <span class="location-name">Моя квартира</span>
+                <span class="location-description">Отдохнуть и обустроить быт</span>
             </button>
             
             <!-- Больница -->
@@ -147,8 +147,13 @@
 
     <script>
         function startLocation(locationType) {
-            // Все социальные локации активны и ведут на игру
+            // Остальные локации ведут на игру
             window.location.href = `game.html?area=residential&location=${locationType}`;
+        }
+
+        function goToApartment() {
+            // Жилой комплекс ведёт в квартиру
+            window.location.href = 'apartment.html';
         }
 
         function goBack() {
