@@ -552,30 +552,32 @@
             updateGlobalCooldownIndicator();
         }
         
-        // Функция для обновления цвета полосы здоровья
-        function updateHealthBarColor() {
-            if (!currentOpponent) return;
-            
-            const healthPercent = currentOpponent.health / currentOpponent.maxHealth;
-            const healthFill = document.getElementById('healthFill');
-            
-            // Плавный переход от красного к зеленому через HSL
-            const hue = healthPercent * 120; // 0° (красный) -> 120° (зеленый)
-            const saturation = 85;
-            const lightness = 45;
-            
-            const startColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-            const endColor = `hsl(${hue}, ${saturation}%, ${lightness + 10}%)`;
-            
-            healthFill.style.background = `linear-gradient(90deg, ${startColor}, ${endColor})`;
-            
-            // Пульсация при критическом здоровье
-            if (healthPercent < 0.15) {
-                healthFill.style.animation = 'criticalPulse 0.8s infinite';
-            } else {
-                healthFill.style.animation = 'none';
-            }
-        }
+        // Функция для обновления цвета полосы здоровья (ИСПРАВЛЕННАЯ)
+function updateHealthBarColor() {
+    if (!currentOpponent) return;
+    
+    const healthPercent = currentOpponent.health / currentOpponent.maxHealth;
+    const healthFill = document.getElementById('healthFill');
+    
+    // ИНВЕРТИРОВАННЫЙ ПЕРЕХОД: красный (100%) -> зеленый (0%)
+    // 120° (зеленый) -> 0° (красный)
+    const hue = (1 - healthPercent) * 120; // Инвертируем healthPercent
+    
+    const saturation = 85;
+    const lightness = 45;
+    
+    const startColor = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+    const endColor = `hsl(${hue}, ${saturation}%, ${lightness + 10}%)`;
+    
+    healthFill.style.background = `linear-gradient(90deg, ${startColor}, ${endColor})`;
+    
+    // Пульсация при критическом здоровье (теперь при healthPercent < 0.15)
+    if (healthPercent < 0.15) {
+        healthFill.style.animation = 'criticalPulse 0.8s infinite';
+    } else {
+        healthFill.style.animation = 'none';
+    }
+}
 
         // Добавляем стили для анимации
         const healthBarStyle = document.createElement('style');
