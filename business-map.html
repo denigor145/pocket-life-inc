@@ -134,9 +134,9 @@
             
             <!-- Биржа труда -->
             <button class="location-btn" onclick="startLocation('job_center')">
-                <span class="location-icon">👥</span>
-                <span class="location-name">Биржа труда</span>
-                <span class="location-description">Подбор персонала</span>
+               <span class="location-icon">👥</span>
+               <span class="location-name">Биржа труда</span>
+               <span class="location-description">Подбор персонала</span>
             </button>
         </div>
         
@@ -147,9 +147,12 @@
 
     <script>
         function startLocation(locationType) {
-            // Все бизнес-локации активны и ведут на игру
-            window.location.href = `game.html?area=business&location=${locationType}`;
-        }
+    if (locationType === 'job_center') {
+        window.location.href = 'job-center.html';
+    } else {
+        window.location.href = `game.html?area=business&location=${locationType}`;
+    }
+}
 
         function goBack() {
             window.location.href = 'start-game.html';
