@@ -115,11 +115,10 @@
                 </button>
                 
                 <!-- Открыть магазин - НЕ АКТИВНА -->
-                <button class="option-btn" disabled onclick="openShop()">
+                <button class="option-btn" onclick="openShop()">
                     <span class="option-icon">🏪</span>
                     Открыть магазин
-                    <span style="font-size: 12px; margin-left: auto;">🔒</span>
-                </button>
+                 </button>
             </div>
 
             <button class="option-btn btn-back" onclick="goBack()">
@@ -144,7 +143,7 @@
         }
 
         function openShop() {
-            alert('Функция "Открыть магазин" будет доступна в следующем обновлении!');
+            window.location.href = 'open-shop.html';
         }
 
         function goBack() {
