@@ -592,7 +592,7 @@
         // Обновить отображение баланса
         function updateBalanceDisplay() {
             if (window.playerInventory) {
-                document.getElementById('currentBalance').textContent = window.playerInventory.money.toLocaleString();
+                document.getElementById('currentBalance').textContent = window.playerInventory.getMoney().toLocaleString();
             }
         }
 
@@ -604,7 +604,7 @@
                 const price = getShopPrice(card.getAttribute('data-shop-type'));
                 const buyBtn = card.querySelector('.buy-btn');
                 
-                if (window.playerInventory.money < price) {
+                if (window.playerInventory && !window.playerInventory.canAfford(price)) {
                     buyBtn.disabled = true;
                     buyBtn.textContent = 'Недостаточно средств';
                 } else {
@@ -632,14 +632,11 @@
                 return;
             }
 
-            if (window.playerInventory.money < price) {
+            if (!window.playerInventory.spendMoney(price)) {
                 alert('Недостаточно денег для покупки магазина!');
                 return;
             }
 
-            // Списываем деньги
-            window.playerInventory.money -= price;
-            
             // Создаем магазин
             playerShop = {
                 type: shopType,
@@ -659,6 +656,7 @@
             
             // Обновляем баланс
             updateBalanceDisplay();
+            updateBuyButtons();
             
             // Показываем сообщение
             showMessage(`Поздравляем! Вы открыли ${shopName}`);
@@ -929,13 +927,10 @@
                 return;
             }
             
-            if (window.playerInventory.money < price) {
+            if (!window.playerInventory.spendMoney(price)) {
                 alert('Недостаточно денег для закупки товара!');
                 return;
             }
-            
-            // Списываем деньги
-            window.playerInventory.money -= price;
             
             // Добавляем товар на склад
             if (!playerShop.warehouse[productId]) {
