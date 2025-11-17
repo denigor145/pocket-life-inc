@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Биржа труда - Экономический симулятор</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        /* Заголовок */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .balance-info {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            font-weight: 500;
+        }
+        .tab.active {
+            background: white;
+            border-bottom: 3px solid #667eea;
+            color: #667eea;
+        }
+        
+        /* Контент вкладок */
+        .tab-content {
+            padding: 20px;
+            min-height: 400px;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Список ботов */
+        .bots-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .specialty-section {
+            margin-bottom: 25px;
+        }
+        
+        .specialty-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e9ecef;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .bot-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .bot-card:hover {
+            border-color: #667eea;
+            background: #fff;
+        }
+        
+        .bot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .bot-name {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .bot-level {
+            background: #667eea;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .bot-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .bot-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: white;
+            padding: 8px 5px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .stat-value {
+            font-weight: bold;
+            font-size: 14px;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 10px;
+            color: #6c757d;
+            margin-top: 3px;
+        }
+        
+        .hire-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .hire-btn:hover {
+            background: #218838;
+            transform: scale(1.02);
+        }
+        
+        .hire-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Сообщение о найме */
+        .hire-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(40, 167, 69, 0.9);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+        
+        /* Заглушка для игроков */
+        .players-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+        
+        .placeholder-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        .btn-back {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-back:hover {
+            background: #5a6268;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Биржа труда</h1>
+            <div class="balance-info">
+                Баланс: <span id="currentBalance">0</span> ₽
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('players')">👤 Игроки</div>
+            <div class="tab" onclick="switchTab('bots')">🤖 Боты</div>
+        </div>
+        
+        <!-- Вкладка Игроки -->
+        <div id="players-tab" class="tab-content active">
+            <div class="players-placeholder">
+                <div class="placeholder-icon">🚧</div>
+                <h3>Раздел в разработке</h3>
+                <p>Скоро здесь появятся реальные игроки для найма!</p>
+                <p style="font-size: 12px; margin-top: 10px;">Временно пользуйтесь ботами во вкладке "Боты"</p>
+            </div>
+        </div>
+        
+        <!-- Вкладка Боты -->
+        <div id="bots-tab" class="tab-content">
+            <div class="bots-list">
+                <!-- Продавцы -->
+                <div class="specialty-section">
+                    <div class="specialty-title">
+                        <span>💼 Продавцы</span>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="seller_1" data-price="1000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Иван Продажников</span>
+                                <span class="bot-level">Ур. 1</span>
+                            </div>
+                            <div class="bot-price">1000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">80%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">3</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">5</div>
+                                <div class="stat-label">Общение</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('seller_1', 1000, 'Иван Продажников')">
+                            Нанять за 1000 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="seller_2" data-price="1500">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Мария Торговцева</span>
+                                <span class="bot-level">Ур. 2</span>
+                            </div>
+                            <div class="bot-price">1500 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">4</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6</div>
+                                <div class="stat-label">Общение</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('seller_2', 1500, 'Мария Торговцева')">
+                            Нанять за 1500 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="seller_3" data-price="2000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Алексей Менеджеров</span>
+                                <span class="bot-level">Ур. 3</span>
+                            </div>
+                            <div class="bot-price">2000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">90%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">5</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">7</div>
+                                <div class="stat-label">Общение</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('seller_3', 2000, 'Алексей Менеджеров')">
+                            Нанять за 2000 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="seller_4" data-price="2500">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Ольга Консультантова</span>
+                                <span class="bot-level">Ур. 4</span>
+                            </div>
+                            <div class="bot-price">2500 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">95%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">8</div>
+                                <div class="stat-label">Общение</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('seller_4', 2500, 'Ольга Консультантова')">
+                            Нанять за 2500 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="seller_5" data-price="3000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Дмитрий Профессионалов</span>
+                                <span class="bot-level">Ур. 5</span>
+                            </div>
+                            <div class="bot-price">3000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">7</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">9</div>
+                                <div class="stat-label">Общение</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('seller_5', 3000, 'Дмитрий Профессионалов')">
+                            Нанять за 3000 ₽
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Кладовщики -->
+                <div class="specialty-section">
+                    <div class="specialty-title">
+                        <span>📦 Кладовщики</span>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="stocker_1" data-price="1000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Петр Складов</span>
+                                <span class="bot-level">Ур. 1</span>
+                            </div>
+                            <div class="bot-price">1000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">80%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">4</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6</div>
+                                <div class="stat-label">Сила</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('stocker_1', 1000, 'Петр Складов')">
+                            Нанять за 1000 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="stocker_2" data-price="1500">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Анна Грузчикова</span>
+                                <span class="bot-level">Ур. 2</span>
+                            </div>
+                            <div class="bot-price">1500 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">85%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">5</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">7</div>
+                                <div class="stat-label">Сила</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('stocker_2', 1500, 'Анна Грузчикова')">
+                            Нанять за 1500 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="stocker_3" data-price="2000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Сергей Логистов</span>
+                                <span class="bot-level">Ур. 3</span>
+                            </div>
+                            <div class="bot-price">2000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">90%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">6</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">8</div>
+                                <div class="stat-label">Сила</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('stocker_3', 2000, 'Сергей Логистов')">
+                            Нанять за 2000 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="stocker_4" data-price="2500">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Елена Организаторова</span>
+                                <span class="bot-level">Ур. 4</span>
+                            </div>
+                            <div class="bot-price">2500 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">95%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">7</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">9</div>
+                                <div class="stat-label">Сила</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('stocker_4', 2500, 'Елена Организаторова')">
+                            Нанять за 2500 ₽
+                        </button>
+                    </div>
+                    
+                    <div class="bot-card" data-bot-id="stocker_5" data-price="3000">
+                        <div class="bot-header">
+                            <div class="bot-name">
+                                <span>Виктор Силович</span>
+                                <span class="bot-level">Ур. 5</span>
+                            </div>
+                            <div class="bot-price">3000 ₽</div>
+                        </div>
+                        <div class="bot-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">100%</div>
+                                <div class="stat-label">Эффективность</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">8</div>
+                                <div class="stat-label">Скорость</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">10</div>
+                                <div class="stat-label">Сила</div>
+                            </div>
+                        </div>
+                        <button class="hire-btn" onclick="hireBot('stocker_5', 3000, 'Виктор Силович')">
+                            Нанять за 3000 ₽
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn-back" onclick="goBack()">← Вернуться в бизнес-центр</button>
+    </div>
+
+    <!-- Сообщение о найме -->
+    <div class="hire-message" id="hireMessage">
+        Сотрудник успешно нанят!
+    </div>
+
+    <script src="js/inventory.js"></script>
+    <script>
+        // Переключение вкладок
+        function switchTab(tabName) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс со всех кнопок вкладок
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Активировать соответствующую кнопку
+            event.target.classList.add('active');
+        }
+
+        // Наем бота
+        function hireBot(botId, price, botName) {
+            if (!window.playerInventory) {
+                alert('Ошибка: инвентарь не загружен!');
+                return;
+            }
+
+            if (window.playerInventory.money < price) {
+                alert('Недостаточно денег для найма!');
+                return;
+            }
+
+            // Списываем деньги
+            window.playerInventory.money -= price;
+            
+            // Сохраняем информацию о нанятом боте
+            saveHiredBot(botId, botName, price);
+            
+            // Показываем сообщение
+            showHireMessage(`Вы наняли: ${botName} за ${price} ₽`);
+            
+            // Обновляем баланс
+            updateBalanceDisplay();
+            
+            // Обновляем кнопки найма
+            updateHireButtons();
+        }
+
+        // Сохранение информации о нанятом боте
+        function saveHiredBot(botId, botName, price) {
+            let hiredBots = JSON.parse(localStorage.getItem('playerHiredBots') || '[]');
+            
+            // Проверяем, не нанят ли уже этот бот
+            if (!hiredBots.find(bot => bot.id === botId)) {
+                hiredBots.push({
+                    id: botId,
+                    name: botName,
+                    price: price,
+                    hireDate: new Date().toISOString()
+                });
+                
+                localStorage.setItem('playerHiredBots', JSON.stringify(hiredBots));
+            }
+        }
+
+        // Показать сообщение о найме
+        function showHireMessage(message) {
+            const messageElement = document.getElementById('hireMessage');
+            messageElement.textContent = message;
+            messageElement.style.display = 'block';
+            
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 2000);
+        }
+
+        // Обновить отображение баланса
+        function updateBalanceDisplay() {
+            if (window.playerInventory) {
+                document.getElementById('currentBalance').textContent = window.playerInventory.money;
+            }
+        }
+
+        // Обновить кнопки найма (отключить, если недостаточно денег)
+        function updateHireButtons() {
+            const botCards = document.querySelectorAll('.bot-card');
+            
+            botCards.forEach(card => {
+                const price = parseInt(card.getAttribute('data-price'));
+                const hireBtn = card.querySelector('.hire-btn');
+                
+                if (window.playerInventory.money < price) {
+                    hireBtn.disabled = true;
+                    hireBtn.textContent = 'Недостаточно средств';
+                } else {
+                    hireBtn.disabled = false;
+                    hireBtn.textContent = `Нанять за ${price} ₽`;
+                }
+            });
+        }
+
+        // Вернуться в бизнес-центр
+        function goBack() {
+            window.location.href = 'business-map.html';
+        }
+
+        // Инициализация при загрузке
+        window.onload = function() {
+            updateBalanceDisplay();
+            updateHireButtons();
+        };
+    </script>
+</body>
+</html>
